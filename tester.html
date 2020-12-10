@@ -55,6 +55,8 @@
           console.log(e);
           remoteVideo.srcObject = null;
           window.location.reload(1);
+          log("disconected from host!");
+          log(`streaming duration:${remoteVideo.currentTime}`);
         });
 
         conn.on('addstream', (e) => {
@@ -87,9 +89,6 @@
         while (true) {
           await sleep(2000);
           if (!connected) {
-            log("disconected from host!");
-            log(`streaming duration:${remoteVideo.currentTime}`);
-            log("disconected from host!");
             log("retrying to connect");
             window.location.reload(1);
           }
