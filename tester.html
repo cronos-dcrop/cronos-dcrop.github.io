@@ -1,0 +1,133 @@
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <title>Ayame RecvOnly Sample</title>
+  <link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css">
+</head>
+
+<body>
+  <div>
+    <input id="roomIdInput" style="display: none;" type="text" value=""></input>
+    <input id="clientIdInput" style="display: none;" disabled type="text" value=""></input>
+    <select id="video-codec" style="display: none;" onChange="onChangeVideoCodec();">
+      <option value="H264">H264</option>
+    </select>
+    <!-- （Google Chrome、Microsoft Edge でのみで動作します）
+        </p>
+        <button onclick="startConn();">接続</button>
+        <button onclick="disconnect();">切断</button>
+      </div> -->
+    <div id="videoContainer" style="float:left;">
+      <!-- <video id="remote-video" autoplay playsinline controls muted></video> -->
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@open-ayame/ayame-web-sdk@2020.3.0/dist/ayame.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.7.0/qs.min.js"></script>
+    <script src="./main.js"></script>
+    <script type="text/javascript">
+      let connected = false;
+      let isStarted = false;
+
+      const options = Ayame.defaultOptions;
+      options.clientId = clientId ? clientId : options.clientId;
+      if (signalingKey) {
+        options.signalingKey = signalingKey;
+      }
+      options.video.direction = 'recvonly';
+      options.audio.direction = 'recvonly';
+      let remoteVideo = null;
+      let conn;
+      const disconnect = () => {
+        if (conn) {
+          conn.disconnect();
+        }
+      }
+      const startConn = async () => {
+        options.video.codec = videoCodec;
+        conn = Ayame.connection(signalingUrl, roomId, options, true);
+        log("RoomId = " + roomId);
+        conn.connect(null);
+        conn.on('connect', (e) => {
+          connected = true;
+        });
+
+        conn.on('disconnect', (e) => {
+          console.log(e);
+          remoteVideo.srcObject = null;
+          window.location.reload(1);
+        });
+
+        conn.on('addstream', (e) => {
+          createVideoIfNotExistent();
+          remoteVideo.srcObject = e.stream;
+        });
+      };
+      document.querySelector("#roomIdInput").value = roomId;
+      document.querySelector("#clientIdInput").value = options.clientId;
+
+      window.onload = function () {
+        startConn();
+        //checkAndReconnect();
+        //consoleLog();
+        start();
+      }
+
+      const sleep = ms => new Promise(resolve =>
+        setTimeout(resolve, ms)
+      );
+
+      const start = async () => {
+        if (!isStarted) {
+          doWorkAsync();
+        }
+        isStarted = true;
+      }
+
+      async function doWorkAsync() {
+        while (true) {
+          await sleep(2000);
+          if (!connected) {
+            log("retrying to connect");
+            window.location.reload(1);
+          }
+        }
+      }
+
+      function createVideoIfNotExistent() {
+        if (remoteVideo == null) {
+          var video = document.createElement("video");
+          video.style.visibility = "visible";
+          video.id = "remote-video";
+          video.autoplay = "true";
+          video.controls = "true";
+          video.muted = "true";
+
+          document.getElementById("videoContainer").appendChild(video);
+          remoteVideo = document.querySelector('#remote-video');
+        }
+      }
+
+      function log(txt) {
+        let log = `${roomId}@log:${Text}`;
+        window.parent.log(log);
+      }
+    </script>
+    <style>
+      video {
+        position: absolute;
+        float: left;
+        top: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        visibility: hidden;
+      }
+
+      body {
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+</body>
+
+</html>
