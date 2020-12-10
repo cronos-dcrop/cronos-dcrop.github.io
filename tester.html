@@ -27,6 +27,7 @@
     <script type="text/javascript">
       let connected = false;
       let isStarted = false;
+      let streamingSeconds = 0;
 
       const options = Ayame.defaultOptions;
       options.clientId = clientId ? clientId : options.clientId;
@@ -49,6 +50,7 @@
         conn.connect(null);
         conn.on('connect', (e) => {
           connected = true;
+          countStreamingSeconds();
         });
 
         conn.on('disconnect', (e) => {
@@ -56,7 +58,7 @@
           remoteVideo.srcObject = null;
           window.location.reload(1);
           log("disconected from host!");
-          log(`streaming duration:${remoteVideo.currentTime}`);
+          log(`streaming duration:${streamingSeconds} seconds`);
         });
 
         conn.on('addstream', (e) => {
@@ -92,6 +94,13 @@
             log("retrying to connect");
             window.location.reload(1);
           }
+        }
+      }
+
+      async function countStreamingSeconds() {
+        while (true) {
+          await sleep(1000);
+          streamingSeconds++;
         }
       }
 
