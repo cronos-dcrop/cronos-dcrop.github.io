@@ -89,7 +89,7 @@
 
       async function doWorkAsync() {
         while (true) {
-          await sleep(2000);
+          await sleep(60000);
           if (!connected) {
             log("retrying to connect");
             window.location.reload(1);
