@@ -87,6 +87,9 @@
         while (true) {
           await sleep(2000);
           if (!connected) {
+            log("disconected from host!");
+            log(`streaming duration:${remoteVideo.duration}`);
+            log("disconected from host!");
             log("retrying to connect");
             window.location.reload(1);
           }
