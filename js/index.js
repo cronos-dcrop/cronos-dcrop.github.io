@@ -8,7 +8,7 @@ window.onload = function () {
     if (queryString) {
         queryString = queryString.substring(1);
         var parameters = queryString.split('&');
-        var view = parameters.length;
+        var view = 0;
         var videoCodec = "";
         for (var i = 0; i < parameters.length; i++) {
             var element = parameters[i].split('=');
@@ -23,6 +23,7 @@ window.onload = function () {
                 signalingKey = paramValue;
             }
             else {
+                view ++;
                 queryObject[paramName] = "./recvonly.html?roomId=" + paramValue;
                 var iframe = document.createElement("iframe");
                 iframe.id = paramName;
