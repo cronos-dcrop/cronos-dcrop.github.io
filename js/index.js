@@ -16,7 +16,6 @@ window.onload = function () {
             var paramValue = decodeURIComponent(element[1]);
             if (paramName == "videoCodec") {
                 videoCodec = "&videoCodec=" + paramValue;
-                view = view - 1;
             }
             else if (paramName == "signalingKey") {
                 useSignalingKey = true;
