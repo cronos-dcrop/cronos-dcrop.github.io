@@ -3,6 +3,8 @@ const baseUrl = "";
 window.onload = function () {
     var queryString = window.location.search;
     var queryObject = new Object();
+    var useSignalingKey = false;
+    var signalingKey = "";
     if (queryString) {
         queryString = queryString.substring(1);
         var parameters = queryString.split('&');
@@ -15,6 +17,10 @@ window.onload = function () {
             if (paramName == "videoCodec") {
                 videoCodec = "&videoCodec=" + paramValue;
                 view = view - 1;
+            }
+            if (paramName == "signalingKey") {
+                useSignalingKey = true;
+                signalingKey = paramValue;
             }
             else {
                 queryObject[paramName] = "./recvonly.html?roomId=" + paramValue;
@@ -41,7 +47,11 @@ window.onload = function () {
 
         var elements = document.querySelectorAll('iframe');
         for (var i = 0; i < elements.length; i++) {
-            elements[i].src = queryObject[elements[i].id] + videoCodec;
+            if(useSignalingKey){
+                elements[i].src = queryObject[elements[i].id] + videoCodec + `&signalingKey=${signalingKey}`;
+            }else{
+                elements[i].src = queryObject[elements[i].id] + videoCodec;
+            }
             elements[i].style.margin = "2px";
             elements[i].style.border = "0px";
             elements[i].style.width = width;
