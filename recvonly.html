@@ -1,125 +1,360 @@
 <html lang="ja">
-    <head>
-        <meta charset="utf-8">
-        <title>Ayame RecvOnly Sample</title>
-        <link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css">
-    </head>
-    <body>
-      <div>
-        <input id="roomIdInput" style="display: none;" type="text" value=""></input>
-        <input id="clientIdInput" style="display: none;" disabled type="text" value=""></input>
-        <select id="video-codec" style="display: none;" onChange="onChangeVideoCodec();">
-          <option value="H264">H264</option>
-        </select>
-        <!-- （Google Chrome、Microsoft Edge でのみで動作します）
+
+<head>
+  <meta charset="utf-8">
+  <title>Ayame RecvOnly Sample</title>
+  <link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+</head>
+
+<body>
+  <div>
+    <input id="roomIdInput" style="display: none;" type="text" value=""></input>
+    <input id="clientIdInput" style="display: none;" disabled type="text" value=""></input>
+    <select id="video-codec" style="display: none;" onChange="onChangeVideoCodec();">
+      <option value="H264">H264</option>
+    </select>
+    <!-- （Google Chrome、Microsoft Edge でのみで動作します）
         </p>
         <button onclick="startConn();">接続</button>
         <button onclick="disconnect();">切断</button>
       </div> -->
-      <div id="videoContainer" style="float:left;">
-        <!-- <video id="remote-video" autoplay playsinline controls muted></video> -->
-      </div>
-      <script src="https://cdn.jsdelivr.net/npm/@open-ayame/ayame-web-sdk@2020.3.0/dist/ayame.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.7.0/qs.min.js"></script>
-      <script src="./main.js"></script>
-      <script type="text/javascript">
-        let connected = false;
-        let isStarted = false;
+    <div id="videoContainer" style="float:left;">
+      <!-- <video id="remote-video" autoplay playsinline controls muted></video> -->
+    </div>
+    <div id="exposureControl" class="exposureControl noselect control" onmouseover="javascrip:showControls();">
+      <span id="exposureDown" class="exposureDown noselect" onclick="javascript:exposureDown();">-</span><span
+        id="exposureLabel" class="exposureLabel noselect">露出</span><span id="exposureUp" class="exposureUp noselect"
+        onclick="javascript:exposureUp();">+</span>
+    </div>
+    <span id="cameraName" class="cameraName noselect control" onmouseover="javascrip:showControls();">
+      カメラ名
+    </span>
+    <span id="aspectControl" class="aspectControl noselect control" onmouseover="javascrip:showControls();" onclick="javascript:switchAspect();">
+      <i class="fas fa-compress noselect"></i>
+    </span>
 
-        const options = Ayame.defaultOptions;
-        options.clientId = clientId ? clientId : options.clientId;
-        if (signalingKey) {
-          options.signalingKey = signalingKey;
+    <span id="speakerControl" class="speakerControl noselect control" onmouseover="javascrip:showControls();" onclick="javascript:muteUnmute();">
+      <i class="fas fa-volume-mute noselect"></i>
+    </span>
+
+    <span id="fullScreenControl" class="fullScreenControl noselect control" onmouseover="javascrip:showControls();" onclick="javascript:fullScreen();">
+      <i class="fas fa-arrows-alt"></i>
+    </span>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@open-ayame/ayame-web-sdk@2020.3.0/dist/ayame.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.7.0/qs.min.js"></script>
+  <script src="./main.js"></script>
+  <script type="text/javascript">
+    let connected = false;
+    let isStarted = false;
+
+    const options = Ayame.defaultOptions;
+    options.clientId = clientId ? clientId : options.clientId;
+    if (signalingKey) {
+      options.signalingKey = signalingKey;
+    }
+    options.video.direction = 'recvonly';
+    options.audio.direction = 'recvonly';
+    let remoteVideo = null;
+    let conn;
+    const disconnect = () => {
+      if (conn) {
+        conn.disconnect();
+      }
+    }
+    let dataChannel = null;
+    const label = 'dataChannel';
+    const startConn = async () => {
+      options.video.codec = videoCodec;
+      conn = Ayame.connection(signalingUrl, roomId, options, true);
+      console.log("fromIframe >> RoomId = " + roomId);
+      conn.on('connect', (e) => {
+        connected = true;
+      });
+      conn.on('open', async (e) => {
+        dataChannel = await conn.createDataChannel(label);
+        if (dataChannel) {
+          //dataChannel.onmessage = onMessage;
         }
-        options.video.direction = 'recvonly';
-        options.audio.direction = 'recvonly';
-        let remoteVideo = null;
-        let conn;
-        const disconnect = () => {
-          if (conn) {
-            conn.disconnect();
-          }
+      });
+      conn.on('datachannel', (channel) => {
+        if (!dataChannel) {
+          dataChannel = channel;
+          //dataChannel.onmessage = onMessage;
         }
-        const startConn = async () => {
-          options.video.codec = videoCodec;
-          conn = Ayame.connection(signalingUrl, roomId, options, true);
-          console.log("fromIframe >> RoomId = " + roomId);
-          conn.connect(null);
-          conn.on('connect', (e) => {
-            connected = true;
-          });
+      });
+      conn.on('disconnect', (e) => {
+        console.log(e);
+        remoteVideo.srcObject = null;
+        dataChannel = null;
+        window.location.reload(1);
+      });
 
-          conn.on('disconnect', (e) => {
-            console.log(e);
-            remoteVideo.srcObject = null;
-            window.location.reload(1);
-          });
+      conn.on('addstream', (e) => {
+        createVideoIfNotExistent();
+        remoteVideo.srcObject = e.stream;
+      });
 
-          conn.on('addstream', (e) => {
-            createVideoIfNotExistent();
-            remoteVideo.srcObject = e.stream;
-          });
-        };
-        document.querySelector("#roomIdInput").value = roomId;
-        document.querySelector("#clientIdInput").value = options.clientId;
+      conn.connect(null);
+    };
+    document.querySelector("#roomIdInput").value = roomId;
+    let lblCameraName = document.getElementById("cameraName");
+    let cameraName = roomId;
+    cameraName = cameraName.replace("cronos-dcrop@", "");
+    lblCameraName.innerHTML = cameraName;
+    document.querySelector("#clientIdInput").value = options.clientId;
 
-        window.onload = function(){
-          startConn();
-          //checkAndReconnect();
-          //consoleLog();
-          start();
+    window.onload = function () {
+      startConn();
+      //checkAndReconnect();
+      //consoleLog();
+      start();
+    }
+
+    const sleep = ms => new Promise(resolve =>
+      setTimeout(resolve, ms)
+    );
+    function sendDataTroughDatachannel(data) {
+      if (dataChannel && dataChannel.readyState === 'open') {
+        dataChannel.send(data);
+      }
+    }
+    function exposureUp() {
+      sendDataTroughDatachannel("requestAction=exposureUp");
+    }
+    function exposureDown() {
+      sendDataTroughDatachannel("requestAction=exposureDown");
+    }
+    const start = async () => {
+      if (!isStarted) {
+        doWorkAsync();
+      }
+      isStarted = true;
+    }
+
+    async function doWorkAsync() {
+      while (true) {
+        await sleep(2000);
+        if (!connected) {
+          console.log("retrying to connect");
+          window.location.reload(1);
         }
+      }
+    }
 
-        const sleep = ms => new Promise(resolve =>
-          setTimeout(resolve, ms)
-        );
-
-        const start = async () => {
-          if(!isStarted){
-            doWorkAsync();
-          }
-          isStarted = true;
+    function createVideoIfNotExistent() {
+      if (remoteVideo == null) {
+        var video = document.createElement("video");
+        video.style.visibility = "visible";
+        video.id = "remote-video";
+        video.autoplay = "true";
+        video.muted = "true";
+        video.style.objectFit = "cover";
+        video.onmouseover = function () {
+          showControls();
         }
-
-        async function doWorkAsync(){
-          while (true) {
-            await sleep(2000);
-            if(!connected){
-              console.log("retrying to connect");
-              window.location.reload(1);
-            }
-          }
-        }
-
-        function createVideoIfNotExistent(){
-            if (remoteVideo == null){
-              var video = document.createElement("video");
-            video.style.visibility = "visible";
-            video.id = "remote-video";
-            video.autoplay = "true";
-            video.controls = "true";
-            video.muted = "true";
-            
-            document.getElementById("videoContainer").appendChild(video);
-            remoteVideo = document.querySelector('#remote-video');
-            }
-        }
-      </script>
-      <style>
-        video{
-          position: absolute;
-          float: left;
-          top: 0;
-          margin: 0;
-          width: 100%;
-          height: 100%;
-          visibility: hidden;
+        video.onmouseleave = function () {
+          hideControls();
         }
 
-        body{
-          padding: 0;
-          margin: 0;
+        document.getElementById("videoContainer").appendChild(video);
+        remoteVideo = document.querySelector('#remote-video');
+      }
+    }
+
+    function showControls() {
+      let controls = document.getElementsByClassName("control");
+      for (var i = 0; i < controls.length; i++) {
+        let control = controls[i];
+        control.style.visibility = "visible";
+      }
+    }
+
+    function hideControls() {
+      let controls = document.getElementsByClassName("control");
+      for (var i = 0; i < controls.length; i++) {
+        let control = controls[i];
+        control.style.visibility = "hidden";
+      }
+    }
+
+    function switchAspect() {
+      if (remoteVideo != null) {
+        let icon = document.getElementById("aspectControl");
+        if (remoteVideo.style.objectFit == "cover") {
+          remoteVideo.style.objectFit = "unset";
+          icon.innerHTML = '<i class="fas fa-expand noselect"></i>';
+        } else {
+          remoteVideo.style.objectFit = "cover";
+          icon.innerHTML = '<i class="fas fa-compress noselect"></i>';
         }
-      </style>
-  </body>
+      }
+    }
+
+    function muteUnmute() {
+      if (remoteVideo != null) {
+        let icon = document.getElementById("speakerControl");
+        if (remoteVideo.muted === false) {
+          remoteVideo.muted = true;
+          icon.innerHTML = '<i class="fas fa-volume-mute noselect"></i>';
+        } else {
+          remoteVideo.muted = false;
+          icon.innerHTML = '<i class="fas fa-volume-up noselect"></i>';
+        }
+      }
+    }
+
+    function fullScreen() {
+      if (remoteVideo != null) {
+        openFullscreen(remoteVideo);
+      }
+    }
+
+    function openFullscreen(myVideo) {
+      var elem = myVideo
+      console.log(elem)
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.mozRequestFullScreen) { /* Firefox */
+        elem.mozRequestFullScreen();
+      } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) { /* IE/Edge */
+        elem.msRequestFullscreen();
+      }
+    }
+  </script>
+  <style>
+    video {
+      position: absolute;
+      float: left;
+      top: 0;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      visibility: hidden;
+      object-fit: unset;
+    }
+
+    body {
+      padding: 0;
+      margin: 0;
+    }
+
+    .exposureControl {
+      width: 100px;
+      height: 30px;
+      background-color: #7abd27;
+      position: absolute;
+      float: right;
+      bottom: 15px;
+      right: 15px;
+      font-weight: bold;
+      color: white;
+      text-align: center;
+    }
+
+    .cameraName {
+      background-color: #7abd27;
+      color: white;
+      position: absolute;
+      float: left;
+      top: 15px;
+      left: 15px;
+      padding: 5px;
+      font-weight: bold;
+
+    }
+
+    .aspectControl {
+      background-color: #7abd27;
+      color: white;
+      position: absolute;
+      float: left;
+      bottom: 15px;
+      left: 15px;
+      padding: 5px;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .aspectControl:active {
+      color: #676767;
+    }
+
+    .fullScreenControl {
+      background-color: #7abd27;
+      color: white;
+      position: absolute;
+      float: right;
+      top: 15px;
+      right: 15px;
+      padding: 5px;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .fullScreenControl:active {
+      color: #676767;
+    }
+
+    .speakerControl {
+      background-color: #7abd27;
+      color: white;
+      position: absolute;
+      float: left;
+      bottom: 15px;
+      left: 60px;
+      padding: 5px;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .speakerControl:active {
+      color: #676767;
+    }
+
+    .exposureLabel {
+      background-color: #98bf69;
+      background-size: 100% 100%;
+      padding-left: 10px;
+      padding-right: 10px;
+      display: inline-block;
+      height: 100%;
+    }
+
+    .exposureDown:active,
+    .exposureUp:active {
+      color: #676767;
+    }
+
+    .exposureDown,
+    .exposureUp {
+      padding: 8px;
+      cursor: pointer;
+    }
+
+    .noselect {
+      -webkit-touch-callout: none;
+      /* iOS Safari */
+      -webkit-user-select: none;
+      /* Safari */
+      -khtml-user-select: none;
+      /* Konqueror HTML */
+      -moz-user-select: none;
+      /* Old versions of Firefox */
+      -ms-user-select: none;
+      /* Internet Explorer/Edge */
+      user-select: none;
+      /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+    }
+
+    .control {
+      visibility: hidden;
+    }
+  </style>
+</body>
+
 </html>

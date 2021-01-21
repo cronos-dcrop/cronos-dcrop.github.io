@@ -1,0 +1,18 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            //4台表示
+            "url": "http://127.0.0.1:5500/index.html?camera1=cronos-dcrop@diniz-001&camera2=cronos-dcrop@diniz-002&camera3=cronos-dcrop@diniz-003&camera4=cronos-dcrop@diniz-004&videoCodec=VP8&signalingKey=nlDKxZiEOiH_LSk79hK9lBqS6abY4-gBCEzNBL9tGUNkEGQ1",
+            //1台表示
+            //"url": "http://127.0.0.1:5500/recvonly.html?roomId=cronos-dcrop@diniz-note&signalingKey=nlDKxZiEOiH_LSk79hK9lBqS6abY4-gBCEzNBL9tGUNkEGQ1",
+            "webRoot": "${workspaceFolder}"
+        }
+    ]
+}
