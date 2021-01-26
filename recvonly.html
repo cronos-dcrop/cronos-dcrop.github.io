@@ -22,28 +22,31 @@
     <div id="videoContainer" style="float:left;">
       <!-- <video id="remote-video" autoplay playsinline controls muted></video> -->
     </div>
-    <div id="exposureControl" class="exposureControl noselect control" onmouseover="javascrip:showControls();">
-      <span id="exposureDown" class="exposureDown noselect" onclick="javascript:exposureDown();">-</span><span
-        id="exposureLabel" class="exposureLabel noselect">露出</span><span id="exposureUp" class="exposureUp noselect"
-        onclick="javascript:exposureUp();">+</span>
-    </div>
 
-    <span id="cameraName" class="cameraName noselect control" onmouseover="javascrip:showControls();">
+    <span id="exposureDown" class="exposureDownButton noselect control" onmouseover="javascrip:showControls();" onclick="javascript:exposureDown();">-</span>
+    <span id="exposureLabel" class="exposureControlLabel noselect control" onmouseover="javascrip:showControls();">露出</span>
+    <span id="exposureUp" class="exposureUpButton noselect control" onmouseover="javascrip:showControls();" onclick="javascript:exposureUp();">+</span>
+
+    <span id="cameraName" class="cameraName noselect control" onmouseover="javascrip:showControls();" onmouseover="javascrip:showControls();">
       カメラ名
     </span>
-    <span id="aspectControl" class="aspectControl noselect control" onmouseover="javascrip:showControls();" onclick="javascript:switchAspect();">
+    <span id="aspectControl" class="aspectControl noselect control" onmouseover="javascrip:showControls();"
+      onclick="javascript:switchAspect();">
       <i class="fas fa-compress noselect"></i>
     </span>
 
-    <span id="speakerControl" class="speakerControl noselect control" onmouseover="javascrip:showControls();" onclick="javascript:muteUnmute();">
+    <span id="speakerControl" class="speakerControl noselect control" onmouseover="javascrip:showControls();"
+      onclick="javascript:muteUnmute();">
       <i class="fas fa-volume-mute noselect"></i>
     </span>
 
-    <span id="disconnectButton" class="disconnectButton noselect control" onmouseover="javascrip:showControls();" onclick="javascript:disconnect();">
+    <span id="disconnectButton" class="disconnectButton noselect control" onmouseover="javascrip:showControls();"
+      onclick="javascript:disconnect();">
       切断
     </span>
 
-    <span id="fullScreenControl" class="fullScreenControl noselect control" onmouseover="javascrip:showControls();" onclick="javascript:fullScreen();">
+    <span id="fullScreenControl" class="fullScreenControl noselect control" onmouseover="javascrip:showControls();"
+      onclick="javascript:fullScreen();">
       <i class="fas fa-arrows-alt"></i>
     </span>
   </div>
@@ -247,38 +250,47 @@
       margin: 0;
     }
 
-    .exposureControl {
-      width: 100px;
-      height: 30px;
+    .exposureDownButton:active,
+    .exposureUpButton:active {
+      color: #676767;
+    }
+
+    .exposureDownButton{
       background-color: #7abd27;
+      color: white;
+      position: absolute;
+      float: right;
+      bottom: 15px;
+      right: 100px;
+      padding: 5px;
+      font-weight: bold;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .exposureUpButton {
+      background-color: #7abd27;
+      color: white;
       position: absolute;
       float: right;
       bottom: 15px;
       right: 15px;
+      padding: 5px;
       font-weight: bold;
-      color: white;
-      text-align: center;
-    }
-
-    .exposureDown:active,
-    .exposureUp:active {
-      color: #676767;
-    }
-
-    .exposureDown,
-    .exposureUp {
+      font-size: 24px;
       cursor: pointer;
     }
 
-    .exposureLabel {
-      background-color: #98bf69;
-      background-size: 100% 100%;
-      padding-left: 10px;
-      padding-right: 10px;
-      display: inline-block;
-      height: 100%;
-      margin-left: 10px;
-      margin-right: 10px;
+    .exposureControlLabel {
+      background-color: #7abd27;
+      color: white;
+      position: absolute;
+      float: right;
+      bottom: 15px;
+      right: 40px;
+      padding: 5px;
+      font-weight: bold;
+      font-size: 24px;
     }
 
     .cameraName {
