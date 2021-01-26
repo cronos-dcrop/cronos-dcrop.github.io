@@ -27,6 +27,7 @@
         id="exposureLabel" class="exposureLabel noselect">露出</span><span id="exposureUp" class="exposureUp noselect"
         onclick="javascript:exposureUp();">+</span>
     </div>
+
     <span id="cameraName" class="cameraName noselect control" onmouseover="javascrip:showControls();">
       カメラ名
     </span>
@@ -36,6 +37,10 @@
 
     <span id="speakerControl" class="speakerControl noselect control" onmouseover="javascrip:showControls();" onclick="javascript:muteUnmute();">
       <i class="fas fa-volume-mute noselect"></i>
+    </span>
+
+    <span id="disconnectButton" class="disconnectButton noselect control" onmouseover="javascrip:showControls();" onclick="javascript:disconnect();">
+      切断
     </span>
 
     <span id="fullScreenControl" class="fullScreenControl noselect control" onmouseover="javascrip:showControls();" onclick="javascript:fullScreen();">
@@ -255,6 +260,27 @@
       text-align: center;
     }
 
+    .exposureDown:active,
+    .exposureUp:active {
+      color: #676767;
+    }
+
+    .exposureDown,
+    .exposureUp {
+      cursor: pointer;
+    }
+
+    .exposureLabel {
+      background-color: #98bf69;
+      background-size: 100% 100%;
+      padding-left: 10px;
+      padding-right: 10px;
+      display: inline-block;
+      height: 100%;
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+
     .cameraName {
       background-color: #7abd27;
       color: white;
@@ -315,24 +341,20 @@
       color: #676767;
     }
 
-    .exposureLabel {
-      background-color: #98bf69;
-      background-size: 100% 100%;
-      padding-left: 10px;
-      padding-right: 10px;
-      display: inline-block;
-      height: 100%;
+    .disconnectButton {
+      background-color: #7abd27;
+      color: white;
+      position: absolute;
+      float: left;
+      bottom: 15px;
+      left: 110px;
+      padding: 5px;
+      font-weight: bold;
+      font-size: 17px;
     }
 
-    .exposureDown:active,
-    .exposureUp:active {
+    .disconnectButton:active {
       color: #676767;
-    }
-
-    .exposureDown,
-    .exposureUp {
-      padding: 8px;
-      cursor: pointer;
     }
 
     .noselect {

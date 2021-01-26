@@ -30,6 +30,7 @@ window.onload = function () {
                 document.getElementById("container").appendChild(iframe);
             }
         }
+        
         var width = "98%";
         var height = "96%";
         switch (view) {
