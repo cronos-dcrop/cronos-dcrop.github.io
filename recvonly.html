@@ -129,9 +129,11 @@
       }
     }
     function exposureUp() {
+      console.log("exposureUp");
       sendDataTroughDatachannel("requestAction=exposureUp");
     }
     function exposureDown() {
+      console.log("exposureDown");
       sendDataTroughDatachannel("requestAction=exposureDown");
     }
     const start = async () => {
