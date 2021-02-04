@@ -33,3 +33,12 @@ function contrastDown() {
     console.log("contrastDown");
     sendDataTroughDatachannel("requestAction=contrastDown");
 }
+
+function switchAdjustmentsMenu(){
+    let popup = document.getElementById("cameraAdjustmentsMenu");
+    if(popup.style.display === "block"){
+        popup.style.display = "";
+    }else{
+        popup.style.display = "block";
+    }
+}

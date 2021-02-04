@@ -119,6 +119,8 @@ function hideControls() {
     let control = controls[i];
     control.style.visibility = "hidden";
   }
+  let popup = document.getElementById("cameraAdjustmentsMenu");
+  popup.style.display = "";
 }
 
 function switchAspect() {

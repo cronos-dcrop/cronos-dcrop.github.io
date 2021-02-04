@@ -9,48 +9,6 @@ video {
     object-fit: unset;
 }
 
-.exposureDownButton:active, .exposureUpButton:active {
-    color: #676767;
-}
-
-.exposureDownButton {
-    background-color: #7abd27;
-    color: white;
-    position: absolute;
-    float: right;
-    bottom: 15px;
-    right: 100px;
-    padding: 5px;
-    font-weight: bold;
-    font-size: 24px;
-    cursor: pointer;
-}
-
-.exposureUpButton {
-    background-color: #7abd27;
-    color: white;
-    position: absolute;
-    float: right;
-    bottom: 15px;
-    right: 15px;
-    padding: 5px;
-    font-weight: bold;
-    font-size: 24px;
-    cursor: pointer;
-}
-
-.exposureControlLabel {
-    background-color: #7abd27;
-    color: white;
-    position: absolute;
-    float: right;
-    bottom: 15px;
-    right: 40px;
-    padding: 5px;
-    font-weight: bold;
-    font-size: 24px;
-}
-
 .cameraName {
     background-color: #7abd27;
     color: white;
@@ -72,6 +30,7 @@ video {
     padding: 5px;
     font-weight: bold;
     font-size: 24px;
+    cursor: pointer;
 }
 
 .aspectControl:active {
@@ -88,6 +47,7 @@ video {
     padding: 5px;
     font-weight: bold;
     font-size: 24px;
+    cursor: pointer;
 }
 
 .fullScreenControl:active {
@@ -104,6 +64,7 @@ video {
     padding: 5px;
     font-weight: bold;
     font-size: 24px;
+    cursor: pointer;
 }
 
 .speakerControl:active {
@@ -120,9 +81,27 @@ video {
     padding: 5px;
     font-weight: bold;
     font-size: 17px;
+    cursor: pointer;
 }
 
 .disconnectButton:active {
+    color: #676767;
+}
+
+.restartStreamButton {
+    background-color: #7abd27;
+    color: white;
+    position: absolute;
+    float: left;
+    bottom: 15px;
+    left: calc(50% - 90px);
+    padding: 5px;
+    font-weight: bold;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.restartStreamButton:active {
     color: #676767;
 }
 

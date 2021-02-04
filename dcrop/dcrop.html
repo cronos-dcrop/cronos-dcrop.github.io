@@ -23,10 +23,10 @@
     </div>
 
     <div class="dropup noselect control" onmouseover="javascrip:showControls();">
-      <button class="dropbtn">調整</button>
-      <div class="dropup-content">
+      <span class="dropbtn" onclick="javascript:switchAdjustmentsMenu();">調整</span>
+      <div id="cameraAdjustmentsMenu" class="dropup-content">
         <span><i class="minusIcon" onclick="javascript:exposureDown();">-</i><label>露出</label><i class="plusIcon"
-            onclick="javascript:exposureUp();" >+</i></span>
+            onclick="javascript:exposureUp();">+</i></span>
         <span><i class="minusIcon" onclick="javascript:brightnessDown();">-</i><label>明るさ</label><i class="plusIcon"
             onclick="javascript:brightnessUp();">+</i></span>
         <span><i class="minusIcon" onclick="javascript:contrastDown();">-</i><label>コントラスト</label><i class="plusIcon"
@@ -50,7 +50,11 @@
 
     <span id="disconnectButton" class="disconnectButton noselect control" onmouseover="javascrip:showControls();"
       onclick="javascript:disconnect();">
-      切断
+      ページ再読込
+    </span>
+
+    <span id="restartStreamButton" class="restartStreamButton noselect" onclick="javascrip:dcropController.restartStream(roomId);">
+      リスタートストリーム
     </span>
 
     <span id="fullScreenControl" class="fullScreenControl noselect control" onmouseover="javascrip:showControls();"
@@ -64,7 +68,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.7.0/qs.min.js"></script>
   <script src="js/ayame-main.js"></script>
   <script type="text/javascript" src="js/dcrop.js"></script>
-  <script type="text/javascript" src="js/cameraControll.js"></script>
+  <script type="text/javascript" src="js/cameraControl.js"></script>
+  <script type="text/javascript" src="js/dcropCrontrol.js"></script>
 </body>
 
 </html>
