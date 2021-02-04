@@ -23,37 +23,43 @@
       <!-- <video id="remote-video" autoplay playsinline controls muted></video> -->
     </div>
 
-    <span id="exposureDown" class="exposureDownButton noselect control" onmouseover="javascrip:showControls();" onclick="javascript:exposureDown();">-</span>
-    <span id="exposureLabel" class="exposureControlLabel noselect control" onmouseover="javascrip:showControls();">露出</span>
-    <span id="exposureUp" class="exposureUpButton noselect control" onmouseover="javascrip:showControls();" onclick="javascript:exposureUp();">+</span>
+    <span id="exposureDown" class="exposureDownButton noselect control" onclick="javascript:exposureDown();">-</span>
+    <span id="exposureLabel" class="exposureControlLabel noselect control">露出</span>
+    <span id="exposureUp" class="exposureUpButton noselect control" onclick="javascript:exposureUp();">+</span>
 
-    <span id="cameraName" class="cameraName noselect control" onmouseover="javascrip:showControls();" onmouseover="javascrip:showControls();">
+    <span id="cameraName" class="cameraName noselect control">
       カメラ名
     </span>
-    <span id="aspectControl" class="aspectControl noselect control" onmouseover="javascrip:showControls();"
+    <span id="aspectControl" class="aspectControl noselect control"
       onclick="javascript:switchAspect();">
       <i class="fas fa-compress noselect"></i>
     </span>
 
-    <span id="speakerControl" class="speakerControl noselect control" onmouseover="javascrip:showControls();"
+    <span id="speakerControl" class="speakerControl noselect control"
       onclick="javascript:muteUnmute();">
       <i class="fas fa-volume-mute noselect"></i>
     </span>
 
-    <span id="disconnectButton" class="disconnectButton noselect control" onmouseover="javascrip:showControls();"
+    <span id="disconnectButton" class="disconnectButton noselect control"
       onclick="javascript:disconnect();">
       切断
     </span>
 
-    <span id="fullScreenControl" class="fullScreenControl noselect control" onmouseover="javascrip:showControls();"
+    <span id="fullScreenControl" class="fullScreenControl noselect control"
       onclick="javascript:fullScreen();">
       <i class="fas fa-arrows-alt"></i>
+    </span>
+
+    <span id="exitFullScreenControl" class="exitFullScreenControl noselect control"
+      onclick="javascript:exitFullScreen();">
+      <i class="fas fa-window-close"></i>
     </span>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@open-ayame/ayame-web-sdk@2020.3.0/dist/ayame.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.7.0/qs.min.js"></script>
   <script src="./main.js"></script>
   <script type="text/javascript">
+    let isControlActive = false;
     let connected = false;
     let isStarted = false;
 
@@ -113,6 +119,33 @@
     lblCameraName.innerHTML = cameraName;
     document.querySelector("#clientIdInput").value = options.clientId;
 
+    // フル画面チェンジイベント
+    document.addEventListener("fullscreenchange", ()=> {
+      fullScreenChange();
+    });
+    document.addEventListener("webkitfullscreenchange", ()=> {
+      fullScreenChange();
+    });
+    document.addEventListener("mozfullscreenchange", ()=> {
+      fullScreenChange();
+    });
+    document.addEventListener("MSFullscreenChange", ()=> {
+      fullScreenChange();
+    });
+
+    // controlクラスにonMouseOver、onMouseOutイベントを追加
+    controls = document.getElementsByClassName("control");
+    for (var i = 0; i < controls.length; i++) {
+      control = controls[i];
+      control.onmouseover = function () {
+        showControls();
+        isControlActive = true;
+      }
+      control.onmouseout = function () {
+        isControlActive = false;
+      }
+    }
+
     window.onload = function () {
       startConn();
       //checkAndReconnect();
@@ -161,11 +194,19 @@
         video.autoplay = "true";
         video.muted = "true";
         video.style.objectFit = "cover";
-        video.onmouseover = function () {
-          showControls();
-        }
+        // video.onmouseover = function () {
+        //   showControls();
+        // }
         video.onmouseleave = function () {
           hideControls();
+        }
+        video.onmousemove = function () {
+          showControls();
+          setTimeout(function(){
+            if (!isControlActive) {
+              hideControls();
+            }
+          }, 3000);
         }
 
         document.getElementById("videoContainer").appendChild(video);
@@ -178,6 +219,16 @@
       for (var i = 0; i < controls.length; i++) {
         let control = controls[i];
         control.style.visibility = "visible";
+      }
+
+      // 全画面表示の場合
+      if (isFullScreen()) {
+        document.getElementById("fullScreenControl").style.visibility = "hidden";
+        document.getElementById("exitFullScreenControl").style.visibility = "visible";
+      }
+      else {
+        document.getElementById("fullScreenControl").style.visibility = "visible";
+        document.getElementById("exitFullScreenControl").style.visibility = "hidden";
       }
     }
 
@@ -215,23 +266,88 @@
       }
     }
 
+    // フルスクリーン表示
     function fullScreen() {
-      if (remoteVideo != null) {
-        openFullscreen(remoteVideo);
+      // if (remoteVideo != null) {
+      //   openFullscreen(remoteVideo);
+      // }
+
+      // Chrome & Firefox v64以降
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      // Firefox v63以前
+      } else if (document.documentElement.mozRequestFullScreen) {
+        document.documentElement.mozRequestFullScreen();
+      // Safari & Edge & Chrome v68以前
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen();
+      // IE11
+      } else if (document.body.msRequestFullscreen) {
+        document.documentElement.msRequestFullscreen();
       }
     }
 
-    function openFullscreen(myVideo) {
-      var elem = myVideo
-      console.log(elem)
-      if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-      } else if (elem.mozRequestFullScreen) { /* Firefox */
-        elem.mozRequestFullScreen();
-      } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-        elem.webkitRequestFullscreen();
-      } else if (elem.msRequestFullscreen) { /* IE/Edge */
-        elem.msRequestFullscreen();
+    // function openFullscreen(myVideo) {
+    //   var elem = myVideo
+    //   console.log(elem)
+    //   if (elem.requestFullscreen) {
+    //     elem.requestFullscreen();
+    //   } else if (elem.mozRequestFullScreen) { /* Firefox */
+    //     elem.mozRequestFullScreen();
+    //   } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+    //     elem.webkitRequestFullscreen();
+    //   } else if (elem.msRequestFullscreen) { /* IE/Edge */
+    //     elem.msRequestFullscreen();
+    //   }
+    // }
+
+    // フルスクリーン解除
+    function exitFullScreen() {
+      // 切断後、Uncaught TypeError: Failed to execute 'exitFullscreen' on 'Document': Document not activeになる
+      // ため一度フルスクリーンにする。一回目のクリックはエラーになる
+      // なぜ以下のメソッドが必要だろう？？？？
+      fullScreen();
+
+      // Chrome & Firefox v64以降
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      // Firefox v63以前
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      // Safari & Edge & Chrome v44以前
+      } else if (document.webkitCancelFullScreen) {
+        document.webkitCancelFullScreen();
+      // IE11
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    }
+
+    // フルスクリーンチェンジ
+    function fullScreenChange() {
+      var mode = window.parent.document.getElementById("videoMode");
+      var name = window.parent.document.getElementById("fullCameraName");
+      if( window.document.fullscreenElement ){
+        mode.value = "1";
+        name.value = roomId;
+        console.log("フルスクリーン開始");
+      }
+      else{
+        mode.value = "0";
+        name.value = "";
+        console.log("フルスクリーン終了");
+      }
+    }
+
+    // フルスクリーンチェック
+    function isFullScreen() {
+      var mode = window.parent.document.getElementById("videoMode");
+      var name = window.parent.document.getElementById("fullCameraName");
+      if (mode.value == "1" && name.value == roomId) {
+        return true;
+      }
+      else {
+        return false;
       }
     }
   </script>
@@ -336,6 +452,22 @@
     }
 
     .fullScreenControl:active {
+      color: #676767;
+    }
+
+    .exitFullScreenControl {
+      background-color: #7abd27;
+      color: white;
+      position: absolute;
+      float: right;
+      top: 15px;
+      right: 15px;
+      padding: 5px;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .exitFullScreenControl:active {
       color: #676767;
     }
 
