@@ -1,7 +1,7 @@
 const signalingUrl = 'wss://ayame-labo.shiguredo.jp/signaling';
 let roomId = 'ayame-web-sdk-sample';
 let clientId = null;
-let videoCodec = null;
+let videoCodec = "H264";
 let audioCodec = null;
 let signalingKey = null;
 

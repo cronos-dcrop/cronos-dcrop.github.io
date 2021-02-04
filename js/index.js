@@ -23,7 +23,8 @@ window.onload = function () {
             }
             else {
                 view ++;
-                queryObject[paramName] = "./recvonly.html?roomId=" + paramValue;
+                //queryObject[paramName] = "./recvonly.html?roomId=" + paramValue;
+                queryObject[paramName] = "./dcrop/dcrop.html?roomId=" + paramValue;
                 var iframe = document.createElement("iframe");
                 iframe.id = paramName;
                 iframe.className = "cameraIFrame";

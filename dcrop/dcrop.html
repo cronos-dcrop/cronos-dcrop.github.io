@@ -22,7 +22,7 @@
       <!-- <video id="remote-video" autoplay playsinline controls muted></video> -->
     </div>
 
-    <div class="dropup noselect control" onmouseover="javascrip:showControls();">
+    <div class="dropup noselect control">
       <span class="dropbtn" onclick="javascript:switchAdjustmentsMenu();">調整</span>
       <div id="cameraAdjustmentsMenu" class="dropup-content">
         <span><i class="minusIcon" onclick="javascript:exposureDown();">-</i><label>露出</label><i class="plusIcon"
@@ -34,21 +34,20 @@
       </div>
     </div>
 
-    <span id="cameraName" class="cameraName noselect control" onmouseover="javascrip:showControls();"
-      onmouseover="javascrip:showControls();">
+    <span id="cameraName" class="cameraName noselect control">
       カメラ名
     </span>
-    <span id="aspectControl" class="aspectControl noselect control" onmouseover="javascrip:showControls();"
+    <span id="aspectControl" class="aspectControl noselect control"
       onclick="javascript:switchAspect();">
       <i class="fas fa-compress noselect"></i>
     </span>
 
-    <span id="speakerControl" class="speakerControl noselect control" onmouseover="javascrip:showControls();"
+    <span id="speakerControl" class="speakerControl noselect control"
       onclick="javascript:muteUnmute();">
       <i class="fas fa-volume-mute noselect"></i>
     </span>
 
-    <span id="disconnectButton" class="disconnectButton noselect control" onmouseover="javascrip:showControls();"
+    <span id="disconnectButton" class="disconnectButton noselect control"
       onclick="javascript:disconnect();">
       ページ再読込
     </span>
@@ -57,10 +56,14 @@
       リスタートストリーム
     </span>
 
-    <span id="fullScreenControl" class="fullScreenControl noselect control" onmouseover="javascrip:showControls();"
+    <span id="fullScreenControl" class="fullScreenControl noselect control"
       onclick="javascript:fullScreen();">
       <i class="fas fa-arrows-alt"></i>
     </span>
+
+    <span id="exitFullScreenControl" class="exitFullScreenControl noselect control"
+      onclick="javascript:exitFullScreen();">
+      <i class="fas fa-window-close"></i>
   </div>
   <!-- JS Files-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
