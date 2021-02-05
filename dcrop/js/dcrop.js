@@ -230,7 +230,7 @@ function fullScreen() {
   } else if (document.documentElement.webkitRequestFullscreen) {
     document.documentElement.webkitRequestFullscreen();
   // IE11
-  } else if (document.body.msRequestFullscreen) {
+  } else if (document.documentElement.msRequestFullscreen) {
     document.documentElement.msRequestFullscreen();
   }
 }
