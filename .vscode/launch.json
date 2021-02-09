@@ -11,7 +11,7 @@
             //4台表示
             //"url": "http://127.0.0.1:5500/index.html?camera1=cronos-dcrop@diniz-001&camera2=cronos-dcrop@diniz-002&camera3=cronos-dcrop@diniz-003&camera4=cronos-dcrop@diniz-004&videoCodec=VP8&signalingKey=nlDKxZiEOiH_LSk79hK9lBqS6abY4-gBCEzNBL9tGUNkEGQ1",
             //1台表示
-            "url": "http://127.0.0.1:5500/index.html?roomId=cronos-dcrop@centrair-001&signalingKey=nlDKxZiEOiH_LSk79hK9lBqS6abY4-gBCEzNBL9tGUNkEGQ1",
+            "url": "http://127.0.0.1:5500/index.html?camera1=cronos-dcrop@centrair-003&signalingKey=nlDKxZiEOiH_LSk79hK9lBqS6abY4-gBCEzNBL9tGUNkEGQ1",
             "webRoot": "${workspaceFolder}"
         }
     ]

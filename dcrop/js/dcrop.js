@@ -27,6 +27,8 @@ const startConn = async () => {
   console.log("fromIframe >> RoomId = " + roomId);
   conn.on('connect', (e) => {
     connected = true;
+    var restartStreamButton = document.getElementById("restartStreamButton");
+    restartStreamButton.style.visibility = "hidden";
   });
   conn.on('open', async (e) => {
     dataChannel = await conn.createDataChannel(label);
@@ -107,6 +109,8 @@ const start = async () => {
 }
 
 async function doWorkAsync() {
+  var restartStreamButton = document.getElementById("restartStreamButton");
+  restartStreamButton.style.visibility = "visible";
   while (true) {
     await sleep(2000);
     if (!connected) {
