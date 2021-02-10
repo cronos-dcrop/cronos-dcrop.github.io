@@ -1,4 +1,8 @@
 const baseUrl = "";
+var failedLogRequests1 = [];
+var failedLogRequests2 = [];
+var failedLogRequests3 = [];
+var failedLogRequests4 = [];
 
 window.onload = function () {
     var queryString = window.location.search;

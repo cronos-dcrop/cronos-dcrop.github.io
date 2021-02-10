@@ -12,11 +12,13 @@ dcropController.makeRequest = function (method, url, data) {
         xhr.onload = function () {
             if (this.status >= 200 && this.status < 300) {
                 resolve(xhr.response);
+                console.log("makeRequest() >> load resolve");
             } else {
                 reject({
                     status: this.status,
                     statusText: xhr.statusText
                 });
+                console.log("makeRequest() >> load reject");
             }
         };
         xhr.onerror = function () {
@@ -24,11 +26,14 @@ dcropController.makeRequest = function (method, url, data) {
                 status: this.status,
                 statusText: xhr.statusText
             });
+            console.error("makeRequest() >> Error");
         };
         if (method == "POST" && data) {
             xhr.send(data);
+            console.log("makeRequest() >> POST");
         } else {
             xhr.send();
+            console.log("makeRequest()");
         }
     });
 }
@@ -38,5 +43,6 @@ dcropController.restartStream = function (dcropid) {
         dcropid = String(dcropid).replace('cronos-dcrop@','');
     }
     var cmd = `${dcropController.controlUrl}command=restartStream&dcropid=${dcropid}`;
+    console.log(`リスタートストリームします。機械制御サーバーIP：${dcropController.controlUrl} ターゲット：${dcropid}`);
     dcropController.makeRequest('POST', cmd, {});
 }

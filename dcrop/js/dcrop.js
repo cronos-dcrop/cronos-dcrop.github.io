@@ -15,6 +15,7 @@ const disconnect = () => {
   if (conn) {
     conn.disconnect();
   }
+  console.log("ページ再読込");
 }
 let dataChannel = null;
 const label = 'dataChannel';
@@ -29,6 +30,7 @@ const startConn = async () => {
     connected = true;
     var restartStreamButton = document.getElementById("restartStreamButton");
     restartStreamButton.style.visibility = "hidden";
+    console.log("connect");
   });
   conn.on('open', async (e) => {
     dataChannel = await conn.createDataChannel(label);
@@ -61,6 +63,8 @@ let lblCameraName = document.getElementById("cameraName");
 let cameraName = roomId;
 cameraName = cameraName.replace("cronos-dcrop@", "");
 lblCameraName.innerHTML = cameraName;
+logger.logServerId = cameraName;
+
 document.querySelector("#clientIdInput").value = options.clientId;
 
 // フルスクリーンチェンジイベント
@@ -182,9 +186,11 @@ function switchAspect() {
     if (remoteVideo.style.objectFit == "cover") {
       remoteVideo.style.objectFit = "unset";
       icon.innerHTML = '<i class="fas fa-expand noselect"></i>';
+      console.log("aspect expand");
     } else {
       remoteVideo.style.objectFit = "cover";
       icon.innerHTML = '<i class="fas fa-compress noselect"></i>';
+      console.log("aspect compress");
     }
   }
 }
@@ -195,9 +201,11 @@ function muteUnmute() {
     if (remoteVideo.muted === false) {
       remoteVideo.muted = true;
       icon.innerHTML = '<i class="fas fa-volume-mute noselect"></i>';
+      console.log("volume mute");
     } else {
       remoteVideo.muted = false;
       icon.innerHTML = '<i class="fas fa-volume-up noselect"></i>';
+      console.log("volume up");
     }
   }
 }
@@ -265,10 +273,12 @@ function fullScreenChange() {
   if( window.document.fullscreenElement ){
     mode.value = "1";
     name.value = roomId;
+    console.log("フルスクリーン表示");
   }
   else{
     mode.value = "0";
     name.value = "";
+    console.log("フルスクリーン解除");
   }
 }
 
