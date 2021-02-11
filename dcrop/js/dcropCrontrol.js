@@ -1,7 +1,9 @@
 let dcropController = {};
 
 //AWS
-dcropController.controlUrl = "http://3.112.48.95:8080/execute?";
+//dcropController.controlUrl = "http://3.112.48.95:8080/execute?";
+//AWS API
+dcropController.controlUrl = "https://tv8b1fx3q2.execute-api.ap-northeast-1.amazonaws.com/execute?";
 //LOCAL
 //dcropController.controlUrl = "http://localhost:8080/execute?";
 
