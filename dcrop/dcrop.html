@@ -24,31 +24,60 @@
 
     <div class="dropup noselect control">
       <span class="dropbtn" onclick="javascript:switchAdjustmentsMenu();">調整</span>
-      <div id="cameraAdjustmentsMenu" class="dropup-content">
-        <span><i class="minusIcon" onclick="javascript:exposureDown();">-</i><label>露出</label><i class="plusIcon"
-            onclick="javascript:exposureUp();">+</i></span>
-        <span><i class="minusIcon" onclick="javascript:brightnessDown();">-</i><label>明るさ</label><i class="plusIcon"
-            onclick="javascript:brightnessUp();">+</i></span>
-        <span><i class="minusIcon" onclick="javascript:contrastDown();">-</i><label>コントラスト</label><i class="plusIcon"
-            onclick="javascript:contrastUp();">+</i></span>
-      </div>
     </div>
 
+    <div id="cameraAdjustmentsMenu" class="cameraSettingsMenu noselect">
+      <!-- 露出 -->
+      <div class="plusMinusControl">
+        <div class="btn">
+          <i class="iconMinus" onclick="javascript:dcropController.exposureDown(roomId);">-</i>
+        </div>
+        <div class="labelAndValue">
+          <span>露出</span><br><small id="exposure">--</small>
+        </div>
+        <div class="btn">
+          <i class="iconPlus" onclick="javascript:dcropController.exposureUp(roomId);">+</i>
+        </div>
+      </div>
+
+      <!-- 明るさ -->
+      <div class="plusMinusControl">
+        <div class="btn">
+          <i class="iconMinus" onclick="javascript:dcropController.brightnessDown(roomId);">-</i>
+        </div>
+        <div class="labelAndValue">
+          <span>明るさ</span><br><small id="brightness">--</small>
+        </div>
+        <div class="btn">
+          <i class="iconPlus" onclick="javascript:dcropController.brightnessUp(roomId);">+</i>
+        </div>
+      </div>
+
+      <!-- コントラスト -->
+      <div class="plusMinusControl">
+        <div class="btn">
+          <i class="iconMinus" onclick="javascript:dcropController.contrastDown(roomId);">-</i>
+        </div>
+        <div class="labelAndValue">
+          <span>コントラスト</span><br><small id="contrast">--</small>
+        </div>
+        <div class="btn">
+          <i class="iconPlus" onclick="javascript:dcropController.contrastUp(roomId);">+</i>
+        </div>
+      </div>
+    </div>
     <span id="cameraName" class="cameraName noselect control">
       カメラ名
     </span>
-    <span id="aspectControl" class="aspectControl noselect control"
-      onclick="javascript:switchAspect();">
+    <span id="aspectControl" class="aspectControl noselect control" onclick="javascript:switchAspect();">
       <i class="fas fa-compress noselect"></i>
     </span>
 
-    <span id="speakerControl" class="speakerControl noselect control"
-      onclick="javascript:muteUnmute();">
+    <span id="speakerControl" class="speakerControl noselect control" onclick="javascript:muteUnmute();">
       <i class="fas fa-volume-mute noselect"></i>
     </span>
 
-    <span id="disconnectButton" class="disconnectButton noselect control"
-      onclick="javascript:disconnect();">
+    <span id="disconnectButton" class="disconnectButton noselect control" onclick="javascript:disconnect();">
       ページ再読込
     </span>
 
@@ -57,8 +86,7 @@
       リスタートストリーム
     </span>
 
-    <span id="fullScreenControl" class="fullScreenControl noselect control"
-      onclick="javascript:fullScreen();">
+    <span id="fullScreenControl" class="fullScreenControl noselect control" onclick="javascript:fullScreen();">
       <i class="fas fa-arrows-alt"></i>
     </span>
 
@@ -73,7 +101,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.7.0/qs.min.js"></script>
   <script src="js/ayame-main.js"></script>
   <script type="text/javascript" src="js/dcrop.js"></script>
-  <script type="text/javascript" src="js/cameraControl.js"></script>
   <script type="text/javascript" src="js/dcropCrontrol.js"></script>
 </body>
 
