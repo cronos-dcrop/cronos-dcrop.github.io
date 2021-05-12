@@ -143,6 +143,57 @@ dcropController.contrastDown = function (dcropid) {
     });
 }
 
+dcropController.getContrast = function (dcropid) {
+    if (dcropid) {
+        dcropid = String(dcropid).replace('cronos-dcrop@', '');
+    }
+    var cmd = `${dcropController.controlUrl}command=getContrast&dcropid=${dcropid}`;
+    console.log(`コントラストを取得してます。機械制御サーバーIP：${dcropController.controlUrl} ターゲット：${dcropid}`);
+    dcropController.makeRequest('GET', cmd, null, function(error, result){
+        if(result){
+            result = JSON.parse(result);
+            if(result.commandOutput){
+                contrast = document.getElementById('contrast');
+                contrast.innerText = result.commandOutput;
+            }
+        }
+    });
+}
+
+dcropController.getBrightness = function (dcropid) {
+    if (dcropid) {
+        dcropid = String(dcropid).replace('cronos-dcrop@', '');
+    }
+    var cmd = `${dcropController.controlUrl}command=getBrightness&dcropid=${dcropid}`;
+    console.log(`明るさを取得してます。機械制御サーバーIP：${dcropController.controlUrl} ターゲット：${dcropid}`);
+    dcropController.makeRequest('GET', cmd, null, function(error, result){
+        if(result){
+            result = JSON.parse(result);
+            if(result.commandOutput){
+                brightness = document.getElementById('brightness');
+                brightness.innerText = result.commandOutput;
+            }
+        }
+    });
+}
+
+dcropController.getExposure = function (dcropid) {
+    if (dcropid) {
+        dcropid = String(dcropid).replace('cronos-dcrop@', '');
+    }
+    var cmd = `${dcropController.controlUrl}command=getExposure&dcropid=${dcropid}`;
+    console.log(`露出を取得してます。機械制御サーバーIP：${dcropController.controlUrl} ターゲット：${dcropid}`);
+    dcropController.makeRequest('GET', cmd, null, function(error, result){
+        if(result){
+            result = JSON.parse(result);
+            if(result.commandOutput){
+                exposure = document.getElementById('exposure');
+                exposure.innerText = result.commandOutput;
+            }
+        }
+    });
+}
+
 function switchAdjustmentsMenu() {
     let popup = document.getElementById("cameraAdjustmentsMenu");
     if (popup.style.display === "block") {

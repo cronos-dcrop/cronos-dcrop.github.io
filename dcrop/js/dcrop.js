@@ -37,6 +37,11 @@ const startConn = async () => {
     if (dataChannel) {
       //dataChannel.onmessage = onMessage;
     }
+
+    //接続後に明るさ・露出・コントラストの数字を取得して表示させます
+    dcropController.getExposure(roomId);
+    dcropController.getBrightness(roomId);
+    dcropController.getContrast(roomId);
   });
   conn.on('datachannel', (channel) => {
     if (!dataChannel) {
