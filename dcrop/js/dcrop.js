@@ -17,8 +17,6 @@ const disconnect = () => {
   }
   console.log("ページ再読込");
 }
-let dataChannel = null;
-const label = 'dataChannel';
 const startConn = async () => {
   await sleep(500);
   options.video.codec = videoCodec;
@@ -33,21 +31,14 @@ const startConn = async () => {
     console.log("connect");
   });
   conn.on('open', async (e) => {
-    dataChannel = await conn.createDataChannel(label);
-    if (dataChannel) {
-      //dataChannel.onmessage = onMessage;
-    }
-  });
-  conn.on('datachannel', (channel) => {
-    if (!dataChannel) {
-      dataChannel = channel;
-      //dataChannel.onmessage = onMessage;
-    }
+    //接続後に明るさ・露出・コントラストの数字を取得して表示させます
+    dcropController.getExposure(roomId);
+    dcropController.getBrightness(roomId);
+    dcropController.getContrast(roomId);
   });
   conn.on('disconnect', (e) => {
     console.log(e);
     remoteVideo.srcObject = null;
-    dataChannel = null;
     window.location.reload(1);
   });
 
